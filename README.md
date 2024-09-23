@@ -10,9 +10,9 @@ For simplicity's (laziness') sake, I've hardcoded the two pipe names.
 
 In your emulator configurations, redirect a serial port to one each of:
 
-\\.\pipe\86Box1
+\\\\.\\pipe\\86Box1
 
-\\.\pipe\86Box2
+\\\\.\\pipe\\86Box2
 
 Run the emulators.
 
