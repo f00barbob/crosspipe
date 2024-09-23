@@ -16,8 +16,6 @@ namespace crosspipe
             pipe1 = new NamedPipeClientStream(".", "86Box1", PipeDirection.InOut, PipeOptions.Asynchronous | PipeOptions.WriteThrough);
             pipe2 = new NamedPipeClientStream(".", "86Box2", PipeDirection.InOut, PipeOptions.Asynchronous | PipeOptions.WriteThrough);
 
-
-
             try
             {
                 pipe1.Connect(1000);
@@ -47,6 +45,8 @@ namespace crosspipe
             {
                 Console.WriteLine();
                 var k = Console.ReadKey();
+                Console.WriteLine();
+
                 switch (k.Key)
                 {
                     case ConsoleKey.Q:
@@ -61,6 +61,7 @@ namespace crosspipe
                         break;
                     case ConsoleKey.D:
                         debug = !debug;
+                        Console.WriteLine("debug=" + debug.ToString());
                         break;
                     default:
                         break;
@@ -93,10 +94,13 @@ namespace crosspipe
                 try
                 {
                     byte a = (byte)pipe1.ReadByte();
-                    //uncomment these blocks for 1/4 the throughput and ugly colors!
-                    //Console.ForegroundColor = ConsoleColor.Red;
-                    //Console.WriteLine("1: {0:X02} {1}", (int)a, (char)a);
-                    //Console.ForegroundColor = ConsoleColor.White;
+
+                    if (debug)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("1: {0:X02} {1}", (int)a, (char)a);
+                        Console.ResetColor();
+                    }
 
                     pipe2.WriteByte(a);
                     pipe2.Flush();
@@ -104,7 +108,7 @@ namespace crosspipe
                 }
                 catch (Exception ex)
                 {
-                    Console.Write("! " + ex.ToString());
+                    Console.Write("p1p2: " + ex.ToString());
                     return;
                 }
             }
@@ -115,7 +119,7 @@ namespace crosspipe
                 i = 0;
             }
         }
-
+            
         static void p2p1()
         {
             int i = 0;
@@ -128,16 +132,19 @@ namespace crosspipe
 
                     byte a = (byte)pipe2.ReadByte();
                     // this code has stupid cow powers
-                    // Console.ForegroundColor = ConsoleColor.Green;
-                    // Console.WriteLine("\t2: {0:X02} {1}", (int)a, (char)a);
-                    // Console.ForegroundColor = ConsoleColor.White;
+                    if (debug)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("\t2: {0:X02} {1}", (int)a, (char)a);
+                        Console.ResetColor();
+                    }
                     pipe1.WriteByte(a);
                     pipe1.Flush();
                     pipe1.WaitForPipeDrain();
                 }
                 catch (Exception ex)
                 {
-                    Console.Write("@ " + ex.ToString());
+                    Console.Write("p2p1: " + ex.ToString());
                     if (isExiting)
                     {
                         return;
