@@ -26,4 +26,6 @@ Tested mainly with 115200 8N1 and 9600 8N1 in LapLink 3 and QModem xmodem and zm
 
 It did not seem like 86Box can handle reconnections, so you will probably need to restart your emulators before restarting this program if something goes wrong.
 
-This code should also compile in .Net Framework 4.x.
+This code should also compile in .Net Framework 4.x. (currently in .Net 8.0 because I was too lazy to change it)
+
+The license is MIT; please don't come crying to me.
